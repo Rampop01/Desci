@@ -1,65 +1,153 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import { useState, useMemo } from "react"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { DatasetCard } from "@/components/dataset-card"
+import { getAllDatasets } from "@/lib/store"
+import { Search, Database, Shield, Zap } from "lucide-react"
+import type { LicenseType } from "@/lib/contracts"
+
+type FilterType = "all" | LicenseType
+
+export default function MarketplacePage() {
+  const [searchQuery, setSearchQuery] = useState("")
+  const [licenseFilter, setLicenseFilter] = useState<FilterType>("all")
+
+  const datasets = getAllDatasets()
+
+  const filteredDatasets = useMemo(() => {
+    return datasets.filter((dataset) => {
+      const matchesSearch =
+        dataset.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        dataset.description.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesLicense = licenseFilter === "all" || dataset.licenseType === licenseFilter
+      return matchesSearch && matchesLicense
+    })
+  }, [datasets, searchQuery, licenseFilter])
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="pb-16">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden border-b border-border bg-gradient-to-b from-secondary/50 to-background">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(74,222,128,0.08),transparent_50%)]" />
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+          <div className="relative">
+            <Badge variant="outline" className="mb-4">
+              Decentralized Scientific Data
+            </Badge>
+            <h1 className="max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl text-balance">
+              Own, License & Share{" "}
+              <span className="text-primary">Scientific Datasets</span>
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg text-muted-foreground text-pretty">
+              A decentralized marketplace where researchers publish datasets, prove ownership with
+              NFTs, and license access using blockchain technology.
+            </p>
+
+            {/* Search Bar */}
+            <div className="mt-8 flex max-w-xl gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Search datasets..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div className="mt-12 flex flex-wrap gap-8">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                  <Database className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">{datasets.length}</p>
+                  <p className="text-sm text-muted-foreground">Datasets</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                  <Shield className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">NFT</p>
+                  <p className="text-sm text-muted-foreground">Ownership</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                  <Zap className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">IPFS</p>
+                  <p className="text-sm text-muted-foreground">Storage</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Marketplace Section */}
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-2xl font-semibold">Available Datasets</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Browse and license scientific datasets from researchers worldwide
+            </p>
+          </div>
+
+          {/* Filter Buttons */}
+          <div className="flex gap-2">
+            <Button
+              variant={licenseFilter === "all" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setLicenseFilter("all")}
+            >
+              All
+            </Button>
+            <Button
+              variant={licenseFilter === "research" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setLicenseFilter("research")}
+            >
+              Research Only
+            </Button>
+            <Button
+              variant={licenseFilter === "commercial" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setLicenseFilter("commercial")}
+            >
+              Commercial
+            </Button>
+          </div>
         </div>
-      </main>
+
+        {/* Dataset Grid */}
+        {filteredDatasets.length > 0 ? (
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredDatasets.map((dataset) => (
+              <DatasetCard key={dataset.id} dataset={dataset} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-16 text-center">
+            <Database className="mx-auto h-12 w-12 text-muted-foreground/50" />
+            <h3 className="mt-4 text-lg font-medium">No datasets found</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {searchQuery
+                ? "Try adjusting your search or filter criteria"
+                : "Be the first to publish a dataset!"}
+            </p>
+          </div>
+        )}
+      </section>
     </div>
-  );
+  )
 }
