@@ -1,66 +1,117 @@
-## Foundry
+# DSDM Smart Contracts
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+Smart contracts for the Decentralized Scientific Dataset Marketplace.
 
-Foundry consists of:
+## Contracts
 
-- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
-- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
-- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
-- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+### DatasetNFT.sol
+ERC-721 NFT contract representing ownership of scientific datasets.
 
-## Documentation
+Features:
+- Mint dataset ownership NFTs with SHA-256 hash verification
+- Store IPFS content hashes for decentralized data storage
+- Verify dataset authenticity against stored hashes
+- Standard ERC-721 functionality (transfer, approve, etc.)
 
-https://book.getfoundry.sh/
+### DatasetMarketplace.sol
+Marketplace contract for licensing scientific datasets.
 
-## Usage
+Features:
+- List datasets for licensing (not transferring ownership)
+- Purchase licenses with ETH
+- Support for Research and Commercial license types
+- 2.5% platform fee (configurable)
+- Track all licensees per dataset
+- Reentrancy protection
 
-### Build
+## Deployment
 
-```shell
-$ forge build
+### Prerequisites
+
+1. Install dependencies:
+```bash
+cd contracts
+npm install
 ```
 
-### Test
+2. Create a `.env` file:
+```bash
+# Your private key (without 0x prefix)
+PRIVATE_KEY=your_private_key_here
 
-```shell
-$ forge test
+# RPC URLs
+SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_INFURA_KEY
+MUMBAI_RPC_URL=https://polygon-mumbai.infura.io/v3/YOUR_INFURA_KEY
+
+# For contract verification
+ETHERSCAN_API_KEY=your_etherscan_api_key
+POLYGONSCAN_API_KEY=your_polygonscan_api_key
 ```
 
-### Format
+### Deploy to Local Network
 
-```shell
-$ forge fmt
+1. Start a local Hardhat node:
+```bash
+npm run node
 ```
 
-### Gas Snapshots
-
-```shell
-$ forge snapshot
+2. In another terminal, deploy:
+```bash
+npm run deploy:local
 ```
 
-### Anvil
+### Deploy to Sepolia Testnet
 
-```shell
-$ anvil
+1. Get Sepolia ETH from a faucet:
+   - https://sepoliafaucet.com/
+   - https://faucet.sepolia.dev/
+
+2. Deploy:
+```bash
+npm run deploy:sepolia
 ```
 
-### Deploy
+### Deploy to Polygon Mumbai
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+1. Get MATIC from a faucet:
+   - https://faucet.polygon.technology/
+
+2. Deploy:
+```bash
+npm run deploy:mumbai
 ```
 
-### Cast
+## After Deployment
 
-```shell
-$ cast <subcommand>
+After deploying, you'll see output like:
+```
+NEXT_PUBLIC_DATASET_NFT_ADDRESS=0x...
+NEXT_PUBLIC_MARKETPLACE_ADDRESS=0x...
 ```
 
-### Help
+Add these to your Next.js app's environment variables:
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
+1. For local development, add to `.env.local`:
 ```
+NEXT_PUBLIC_DATASET_NFT_ADDRESS=0x...
+NEXT_PUBLIC_MARKETPLACE_ADDRESS=0x...
+```
+
+2. For Vercel deployment, add as environment variables in the Vercel dashboard.
+
+## Testing
+
+```bash
+npm test
+```
+
+## Contract Addresses (Example)
+
+| Network | DatasetNFT | Marketplace |
+|---------|-----------|-------------|
+| Sepolia | TBD | TBD |
+| Mumbai | TBD | TBD |
+
+## License
+
+MIT
