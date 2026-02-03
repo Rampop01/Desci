@@ -57,7 +57,7 @@ export default function BuyerDashboardPage() {
           </p>
         </div>
         <Button asChild variant="outline">
-          <Link href="/">
+          <Link href="/marketplace">
             Browse Marketplace
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
@@ -201,7 +201,7 @@ export default function BuyerDashboardPage() {
                 Browse the marketplace to find datasets for your research.
               </p>
               <Button asChild className="mt-6">
-                <Link href="/">
+                <Link href="/marketplace">
                   Browse Marketplace
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
