@@ -53,7 +53,7 @@ export default function DatasetDetailPage({ params }: PageProps) {
           The dataset you&apos;re looking for doesn&apos;t exist or has been removed.
         </p>
         <Button asChild className="mt-6">
-          <Link href="/">
+          <Link href="/marketplace">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Marketplace
           </Link>
@@ -86,7 +86,7 @@ export default function DatasetDetailPage({ params }: PageProps) {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <Button asChild variant="ghost" className="mb-6">
-        <Link href="/">
+        <Link href="/marketplace">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Marketplace
         </Link>

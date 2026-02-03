@@ -10,7 +10,7 @@ import { useState } from "react"
 import { SUPPORTED_CHAINS } from "@/lib/contracts"
 
 const navLinks = [
-  { href: "/", label: "Marketplace" },
+  { href: "/marketplace", label: "Marketplace" },
   { href: "/publish", label: "Publish" },
   { href: "/creator", label: "Creator Dashboard" },
   { href: "/buyer", label: "My Purchases" },
@@ -48,11 +48,10 @@ export function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                  pathname === link.href
+                className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${pathname === link.href
                     ? "bg-secondary text-foreground"
                     : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                }`}
+                  }`}
               >
                 {link.label}
               </Link>
@@ -73,11 +72,10 @@ export function Header() {
               {/* Network indicator */}
               {chainName && (
                 <div
-                  className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
-                    isCorrectNetwork
+                  className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${isCorrectNetwork
                       ? "bg-primary/10 text-primary"
                       : "bg-amber-500/10 text-amber-500"
-                  }`}
+                    }`}
                 >
                   {!isCorrectNetwork && <AlertTriangle className="h-3 w-3" />}
                   {chainName}
@@ -122,11 +120,10 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                  pathname === link.href
+                className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${pathname === link.href
                     ? "bg-secondary text-foreground"
                     : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                }`}
+                  }`}
               >
                 {link.label}
               </Link>
