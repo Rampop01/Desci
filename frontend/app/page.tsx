@@ -2,107 +2,127 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { ArrowRight, Database, Shield, Zap, Globe, Users, Lock } from "lucide-react"
+import { ArrowRight, Database, Shield, Zap, Globe, Users, Lock, Upload, Key, Coins } from "lucide-react"
 
 export default function LandingPage() {
     return (
         <div className="flex flex-col min-h-[calc(100vh-4rem)]">
             {/* Hero Section */}
             <section className="relative flex-1 overflow-hidden border-b border-border bg-background">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,119,198,0.3),rgba(255,255,255,0))]" />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(74,222,128,0.1),transparent_50%)]" />
+                {/* Abstract Background Shapes */}
+                <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+                <div className="absolute bottom-0 left-0 translate-y-24 -translate-x-24 w-[30rem] h-[30rem] bg-indigo-500/10 rounded-full blur-3xl" />
 
                 <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32 relative z-10">
                     <div className="flex flex-col items-center text-center">
-                        <Badge variant="secondary" className="mb-8 px-4 py-1.5 text-sm font-medium border border-primary/20 bg-primary/5 text-primary">
-                            The Future of Scientific Research
-                        </Badge>
 
-                        <h1 className="max-w-4xl text-5xl font-bold tracking-tight sm:text-7xl">
-                            Decentralized Science <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">
-                                Data Marketplace
+                        <h1 className="max-w-5xl text-5xl font-extrabold tracking-tight sm:text-7xl lg:text-8xl">
+                            Unlock the World's
+                            <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-indigo-600">
+                                Scientific Knowledge
                             </span>
                         </h1>
 
-                        <p className="mt-8 max-w-2xl text-xl text-muted-foreground">
-                            A revolutionary platform for researchers to publish datasets, prove ownership with NFTs, and securely license access using blockchain technology.
+                        <p className="mt-8 max-w-2xl text-xl text-muted-foreground leading-relaxed">
+                            The first decentralized marketplace for scientific data. publish your research, prove ownership, and monetize your contributions to science.
                         </p>
 
-                        <div className="mt-10 flex flex-col sm:flex-row gap-4">
-                            <Button asChild size="lg" className="h-12 px-8 text-base">
+                        <div className="mt-12 flex flex-col sm:flex-row gap-6">
+                            <Button asChild size="lg" className="h-14 px-10 text-lg rounded-full shadow-lg shadow-primary/20 transition-all hover:scale-105">
                                 <Link href="/marketplace">
-                                    Explore Marketplace <ArrowRight className="ml-2 h-4 w-4" />
+                                    Start Browsing
                                 </Link>
                             </Button>
-                            <Button asChild variant="outline" size="lg" className="h-12 px-8 text-base">
+                            <Button asChild variant="outline" size="lg" className="h-14 px-10 text-lg rounded-full border-2 hover:bg-secondary/50">
                                 <Link href="/publish">
-                                    Publish Dataset
+                                    Share Research
                                 </Link>
                             </Button>
                         </div>
 
-                        <div className="mt-20 grid grid-cols-2 gap-8 text-center sm:grid-cols-4 lg:gap-16">
-                            <div className="flex flex-col items-center gap-2">
-                                <p className="text-3xl font-bold tabular-nums">100+</p>
-                                <p className="text-sm text-muted-foreground">Verified Datasets</p>
-                            </div>
-                            <div className="flex flex-col items-center gap-2">
-                                <p className="text-3xl font-bold tabular-nums">$50k+</p>
-                                <p className="text-sm text-muted-foreground">Research Funded</p>
-                            </div>
-                            <div className="flex flex-col items-center gap-2">
-                                <p className="text-3xl font-bold tabular-nums">500+</p>
-                                <p className="text-sm text-muted-foreground">Global Researchers</p>
-                            </div>
-                            <div className="flex flex-col items-center gap-2">
-                                <p className="text-3xl font-bold tabular-nums">0%</p>
-                                <p className="text-sm text-muted-foreground">Platform Fees</p>
-                            </div>
+                        {/* Trust Metrics */}
+                        <div className="mt-24 pt-8 border-t border-border w-full max-w-4xl grid grid-cols-2 lg:grid-cols-4 gap-8">
+                            <Metric label="Verified Datasets" value="100+" delay={0} />
+                            <Metric label="Research Funded" value="$50k+" delay={100} />
+                            <Metric label="Global Researchers" value="500+" delay={200} />
+                            <Metric label="Platform Fees" value="0%" delay={300} />
                         </div>
                     </div>
                 </div>
             </section>
 
+            {/* How It Works Section */}
+            <section className="py-24 bg-background relative overflow-hidden">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div className="text-center mb-20">
+                        <h2 className="text-3xl font-bold tracking-tight sm:text-5xl mb-6">How It Works</h2>
+                        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                            A seamless process for sharing and accessing scientific data, powered by blockchain technology.
+                        </p>
+                    </div>
+
+                    <div className="grid gap-12 lg:grid-cols-3 relative">
+                        {/* Connecting Line (Desktop) */}
+                        <div className="hidden lg:block absolute top-12 left-[16%] right-[16%] h-0.5 bg-gradient-to-r from-transparent via-border to-transparent -z-10" />
+
+                        <StepCard
+                            number="01"
+                            icon={<Upload className="h-8 w-8 text-primary" />}
+                            title="Publish Data"
+                            description="Upload your dataset to decentralized storage (IPFS) and mint a unique NFT representing ownership."
+                        />
+                        <StepCard
+                            number="02"
+                            icon={<Coins className="h-8 w-8 text-primary" />}
+                            title="Set Licensing"
+                            description="Define your terms. Choose between research-only or commercial licenses and set your price in ETH."
+                        />
+                        <StepCard
+                            number="03"
+                            icon={<Key className="h-8 w-8 text-primary" />}
+                            title="Grant Access"
+                            description="Researchers purchase licenses instantly via smart contracts, unlocking secure access to your data."
+                        />
+                    </div>
+                </div>
+            </section>
+
             {/* Features Grid */}
-            <section className="py-24 bg-secondary/20">
+            <section className="py-24 bg-secondary/30">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Why Choose DSDM?</h2>
-                        <p className="mt-4 text-lg text-muted-foreground">
-                            Built on Web3 technology to empower the scientific community.
-                        </p>
+                        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Platform Features</h2>
                     </div>
 
                     <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                         <FeatureCard
-                            icon={<Shield className="h-8 w-8 text-primary" />}
+                            icon={<Shield className="h-6 w-6 text-indigo-500" />}
                             title="Immutable Ownership"
                             description="Mint your datasets as NFTs. Prove origin and ownership forever on the blockchain."
                         />
                         <FeatureCard
-                            icon={<Lock className="h-8 w-8 text-primary" />}
+                            icon={<Lock className="h-6 w-6 text-indigo-500" />}
                             title="Secure Licensing"
                             description="Smart contracts handle licensing rights automatically. Choose between research or commercial terms."
                         />
                         <FeatureCard
-                            icon={<Globe className="h-8 w-8 text-primary" />}
+                            icon={<Globe className="h-6 w-6 text-indigo-500" />}
                             title="Global Access"
                             description="Remove institutional barriers. Access valuable research data from anywhere in the world."
                         />
                         <FeatureCard
-                            icon={<Zap className="h-8 w-8 text-primary" />}
+                            icon={<Zap className="h-6 w-6 text-indigo-500" />}
                             title="Instant Settlements"
                             description="Get paid instantly when someone licenses your data. No intermediaries, no delays."
                         />
                         <FeatureCard
-                            icon={<Database className="h-8 w-8 text-primary" />}
+                            icon={<Database className="h-6 w-6 text-indigo-500" />}
                             title="IPFS Storage"
                             description="Data is stored on decentralized networks, ensuring permanence and censorship resistance."
                         />
                         <FeatureCard
-                            icon={<Users className="h-8 w-8 text-primary" />}
+                            icon={<Users className="h-6 w-6 text-indigo-500" />}
                             title="Peer Reviewed"
                             description="Community-driven validation system establishes trust and quality in shared datasets."
                         />
@@ -111,39 +131,54 @@ export default function LandingPage() {
             </section>
 
             {/* CTA Section */}
-            <section className="relative py-24 overflow-hidden">
+            <section className="relative py-32 overflow-hidden">
                 <div className="absolute inset-0 bg-primary/5" />
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
-                    <div className="rounded-3xl bg-background border border-primary/20 p-8 md:p-16 text-center shadow-2xl shadow-primary/10">
-                        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-6">
-                            Ready to Accelerate Science?
-                        </h2>
-                        <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-                            Join thousands of researchers who are already sharing and monetizing their work on the Decentralized Science Data Marketplace.
-                        </p>
-                        <div className="flex flex-col sm:flex-row justify-center gap-4">
-                            <Button asChild size="lg" className="h-12 px-8 text-base">
-                                <Link href="/marketplace">
-                                    Start Browsing
-                                </Link>
-                            </Button>
-                            <Button asChild variant="outline" size="lg" className="h-12 px-8 text-base">
-                                <Link href="/register">
-                                    Create Account
-                                </Link>
-                            </Button>
-                        </div>
-                    </div>
+                <div className="mx-auto max-w-4xl px-4 relative text-center">
+                    <h2 className="text-4xl font-bold tracking-tight sm:text-5xl mb-8">
+                        Join the Open Science Revolution
+                    </h2>
+                    <p className="text-xl text-muted-foreground mb-12">
+                        Whether you're a researcher, institution, or data scientist, DSDM provides the infrastructure for the next generation of scientific discovery.
+                    </p>
+                    <Button asChild size="lg" className="h-14 px-12 text-lg rounded-full">
+                        <Link href="/register">
+                            Get Started Now <ArrowRight className="ml-2 h-5 w-5" />
+                        </Link>
+                    </Button>
                 </div>
             </section>
         </div>
     )
 }
 
+function Metric({ label, value }: { label: string, value: string, delay: number }) {
+    return (
+        <div className="flex flex-col items-center gap-1">
+            <p className="text-4xl font-bold tracking-tight">{value}</p>
+            <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">{label}</p>
+        </div>
+    )
+}
+
+function StepCard({ number, icon, title, description }: { number: string, icon: React.ReactNode, title: string, description: string }) {
+    return (
+        <div className="relative flex flex-col items-center text-center p-6 bg-background rounded-2xl border border-border/50 shadow-sm">
+            <span className="absolute -top-6 text-6xl font-black text-secondary/40 select-none z-0">
+                {number}
+            </span>
+            <div className="relative z-10 mb-6 bg-primary/10 p-4 rounded-2xl">
+                {icon}
+            </div>
+            <h3 className="text-xl font-bold mb-3">{title}</h3>
+            <p className="text-muted-foreground leading-relaxed">{description}</p>
+        </div>
+    )
+}
+
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
     return (
-        <div className="group relative rounded-2xl border border-border bg-background p-8 hover:border-primary/50 transition-colors">
-            <div className="mb-4 inline-flex items-center justify-center rounded-lg bg-primary/10 p-3 group-hover:bg-primary/20 transition-colors">
+        <div className="flex flex-col p-6 rounded-2xl border border-border/50 bg-background hover:shadow-lg transition-shadow">
+            <div className="h-12 w-12 flex items-center justify-center rounded-lg bg-indigo-50 mb-4">
                 {icon}
             </div>
             <h3 className="mb-2 text-xl font-semibold">{title}</h3>
