@@ -3,12 +3,14 @@ pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract DatasetNFT is ERC721, ERC721URIStorage, Ownable {
+contract DatasetNFT is ERC721, ERC721URIStorage, AccessControl {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
+
+    bytes32 public constant MARKETPLACE_ROLE = keccak256("MARKETPLACE_ROLE");
 
     enum LicenseType {
         RESEARCH_ONLY,
@@ -20,8 +22,6 @@ contract DatasetNFT is ERC721, ERC721URIStorage, Ownable {
         string dataHash;
         string description;
         LicenseType licenseType;
-        uint256 price;
-        bool isListed;
         uint256 createdAt;
     }
 
@@ -32,22 +32,20 @@ contract DatasetNFT is ERC721, ERC721URIStorage, Ownable {
         uint256 indexed tokenId,
         address indexed creator,
         string dataHash,
-        LicenseType licenseType,
-        uint256 price
+        LicenseType licenseType
     );
 
-    event DatasetListed(uint256 indexed tokenId, uint256 price);
-    event DatasetDelisted(uint256 indexed tokenId);
     event AccessGranted(uint256 indexed tokenId, address indexed buyer);
 
-    constructor() ERC721("DatasetNFT", "DSD") Ownable() {}
+    constructor() ERC721("DatasetNFT", "DSD") {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
 
     function mintDataset(
         string memory _tokenURI,
         string memory dataHash,
         string memory description,
-        LicenseType licenseType,
-        uint256 price
+        LicenseType licenseType
     ) external returns (uint256) {
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
@@ -60,30 +58,18 @@ contract DatasetNFT is ERC721, ERC721URIStorage, Ownable {
             dataHash: dataHash,
             description: description,
             licenseType: licenseType,
-            price: price,
-            isListed: false,
             createdAt: block.timestamp
         });
 
-        emit DatasetMinted(newTokenId, msg.sender, dataHash, licenseType, price);
+        emit DatasetMinted(newTokenId, msg.sender, dataHash, licenseType);
         return newTokenId;
     }
 
-    function listDataset(uint256 tokenId, uint256 price) external {
-        require(ownerOf(tokenId) == msg.sender, "Not owner");
-        datasets[tokenId].isListed = true;
-        datasets[tokenId].price = price;
-        emit DatasetListed(tokenId, price);
-    }
-
-    function delistDataset(uint256 tokenId) external {
-        require(ownerOf(tokenId) == msg.sender, "Not owner");
-        datasets[tokenId].isListed = false;
-        emit DatasetDelisted(tokenId);
-    }
-
     function grantAccess(uint256 tokenId, address buyer) external {
-        require(ownerOf(tokenId) == msg.sender, "Not owner");
+        require(
+            hasRole(MARKETPLACE_ROLE, msg.sender) || ownerOf(tokenId) == msg.sender,
+            "Caller is not marketplace or owner"
+        );
         accessPermissions[tokenId][buyer] = true;
         emit AccessGranted(tokenId, buyer);
     }
@@ -105,7 +91,7 @@ contract DatasetNFT is ERC721, ERC721URIStorage, Ownable {
         return super.tokenURI(tokenId);
     }
 
-    function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721URIStorage) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721URIStorage, AccessControl) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
 }
