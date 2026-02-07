@@ -36,9 +36,17 @@ contract DSDMFactory {
         DatasetMarketplace marketplaceContract = new DatasetMarketplace(datasetNFT);
         marketplace = address(marketplaceContract);
         
+        // Grant MARKETPLACE_ROLE to Marketplace contract
+        // The factory is the owner/admin of the NFT contract initially because it deployed it
+        datasetNFTContract.grantRole(datasetNFTContract.MARKETPLACE_ROLE(), marketplace);
+        
         // Deploy LicenseManager
         LicenseManager licenseManagerContract = new LicenseManager(datasetNFT);
         licenseManager = address(licenseManagerContract);
+        
+        // Transfer ownership/admin rights to the creator if desired?
+        // For now, let's grant admin role to msg.sender so they can manage it too
+        datasetNFTContract.grantRole(datasetNFTContract.DEFAULT_ADMIN_ROLE(), msg.sender);
         
         // Store deployment info
         deployments[msg.sender] = DeploymentInfo({

@@ -24,37 +24,59 @@ async function main() {
   const marketplaceAddress = await marketplace.getAddress();
   console.log("   DatasetMarketplace deployed to:", marketplaceAddress);
 
+  // Grant MARKETPLACE_ROLE to Marketplace
+  console.log("\n3. Granting MARKETPLACE_ROLE to Marketplace...");
+  const MARKETPLACE_ROLE = await datasetNFT.MARKETPLACE_ROLE();
+  const tx = await datasetNFT.grantRole(MARKETPLACE_ROLE, marketplaceAddress);
+  await tx.wait();
+  console.log("   Role granted!");
+
+  // Deploy LicenseManager
+  console.log("\n4. Deploying LicenseManager...");
+  const LicenseManager = await hre.ethers.getContractFactory("LicenseManager");
+  const licenseManager = await LicenseManager.deploy(datasetNFTAddress);
+  await licenseManager.waitForDeployment();
+  const licenseManagerAddress = await licenseManager.getAddress();
+  console.log("   LicenseManager deployed to:", licenseManagerAddress);
+
   // Verify deployment
   console.log("\n========================================");
   console.log("DEPLOYMENT COMPLETE!");
   console.log("========================================\n");
-  
+
   console.log("Contract Addresses:");
   console.log("-------------------");
   console.log(`NEXT_PUBLIC_DATASET_NFT_ADDRESS=${datasetNFTAddress}`);
   console.log(`NEXT_PUBLIC_MARKETPLACE_ADDRESS=${marketplaceAddress}`);
-  
+  console.log(`NEXT_PUBLIC_LICENSE_MANAGER_ADDRESS=${licenseManagerAddress}`);
+
   console.log("\n\nAdd these to your .env.local file or Vercel environment variables.");
-  
+
   // Verify contracts on Etherscan (if not localhost)
   const network = hre.network.name;
   if (network !== "localhost" && network !== "hardhat") {
     console.log("\n\nWaiting for block confirmations before verification...");
     await new Promise(resolve => setTimeout(resolve, 30000)); // Wait 30 seconds
-    
-    console.log("\n3. Verifying contracts on Etherscan...");
+
+    console.log("\n5. Verifying contracts on Etherscan...");
     try {
       await hre.run("verify:verify", {
         address: datasetNFTAddress,
         constructorArguments: [],
       });
       console.log("   DatasetNFT verified!");
-      
+
       await hre.run("verify:verify", {
         address: marketplaceAddress,
         constructorArguments: [datasetNFTAddress],
       });
       console.log("   DatasetMarketplace verified!");
+
+      await hre.run("verify:verify", {
+        address: licenseManagerAddress,
+        constructorArguments: [datasetNFTAddress],
+      });
+      console.log("   LicenseManager verified!");
     } catch (error) {
       console.log("   Verification failed:", error.message);
     }

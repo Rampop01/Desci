@@ -22,6 +22,9 @@ contract DSDMTest is Test {
         marketplace = new DatasetMarketplace(address(datasetNFT));
         licenseManager = new LicenseManager(address(datasetNFT));
         
+        // Grant Role
+        datasetNFT.grantRole(datasetNFT.MARKETPLACE_ROLE(), address(marketplace));
+
         vm.stopPrank();
     }
     
@@ -33,8 +36,7 @@ contract DSDMTest is Test {
             "ipfs://QmTestURI",
             "QmDatasetHash123",
             "Test dataset for research",
-            DatasetNFT.LicenseType.RESEARCH_ONLY,
-            0.1 ether
+            DatasetNFT.LicenseType.RESEARCH_ONLY
         );
         
         // List for sale

@@ -20,8 +20,7 @@ contract LicenseManager {
     event LicenseAgreementCreated(
         uint256 indexed tokenId,
         address indexed licensee,
-        DatasetNFT.LicenseType licenseType,
-        uint256 price
+        DatasetNFT.LicenseType licenseType
     );
     
     constructor(address _datasetNFTAddress) {
@@ -48,7 +47,7 @@ contract LicenseManager {
         agreements[tokenId][licensee] = agreement;
         datasetAgreements[tokenId].push(agreement);
         
-        emit LicenseAgreementCreated(tokenId, licensee, info.licenseType, info.price);
+        emit LicenseAgreementCreated(tokenId, licensee, info.licenseType);
     }
     
     function verifyLicense(uint256 tokenId, address user) public view returns (bool) {

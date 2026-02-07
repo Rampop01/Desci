@@ -34,7 +34,9 @@ contract DatasetMarketplace {
     
     function listDataset(uint256 tokenId, uint256 price) external {
         require(datasetNFT.ownerOf(tokenId) == msg.sender, "Not owner");
-        DatasetNFT.DatasetInfo memory info = datasetNFT.getDatasetInfo(tokenId);
+        // Check if seller has approved marketplace to manage the NFT if we wanted to support transfer,
+        // but here we are just granting access. 
+        // We might want to check isApprovedForAll if we were transferring ownership, but we are not.
         
         listings[tokenId] = Listing({
             tokenId: tokenId,
@@ -42,8 +44,6 @@ contract DatasetMarketplace {
             price: price,
             active: true
         });
-        
-        datasetNFT.listDataset(tokenId, price);
         
         emit DatasetListed(tokenId, msg.sender, price);
     }
@@ -53,18 +53,16 @@ contract DatasetMarketplace {
         require(listing.active, "Not listed");
         require(msg.value >= listing.price, "Insufficient payment");
         
-        DatasetNFT.DatasetInfo memory info = datasetNFT.getDatasetInfo(tokenId);
-        require(info.isListed, "Dataset not listed");
-        
         // Transfer payment to seller
         (bool success, ) = payable(listing.seller).call{value: msg.value}("");
         require(success, "Payment failed");
         
         // Grant access to buyer
+        // This requires DatasetMarketplace to have MARKETPLACE_ROLE on DatasetNFT
         datasetNFT.grantAccess(tokenId, msg.sender);
         
-        // Delist after purchase (optional)
-        listing.active = false;
+        // Delist after purchase (optional, can be removed if multiple sales allowed)
+        // listing.active = false; 
         
         emit DatasetPurchased(tokenId, msg.sender, listing.seller, msg.value);
     }
@@ -72,7 +70,6 @@ contract DatasetMarketplace {
     function cancelListing(uint256 tokenId) external {
         require(listings[tokenId].seller == msg.sender, "Not seller");
         listings[tokenId].active = false;
-        datasetNFT.delistDataset(tokenId);
     }
     
     function getListing(uint256 tokenId) external view returns (Listing memory) {
@@ -89,6 +86,8 @@ contract DatasetMarketplace {
                 found++;
             }
         }
+        // Resize array not easily possible in memory without assembly or copying, 
+        // but the assembly block below was doing it.
         
         // Resize array
         assembly {
